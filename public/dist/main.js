@@ -1,0 +1,1 @@
+var name="sig GianMatteo",surname="giancarli";document.write("Hello "+name+"!");
