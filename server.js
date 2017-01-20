@@ -1,4 +1,4 @@
-var StaticServer = require('static-server');
+ var StaticServer = require('static-server');
 
 var server = new StaticServer({
   rootPath: './public/',

@@ -77,7 +77,7 @@ gulp.task('templates',function(){
   .pipe(livereload())
 })
 
-gulp.task('watch',function(){
+gulp.task('watch',['default'],function(){
   console.log('WATCH');
   require('./server.js');
   livereload.listen();
@@ -86,6 +86,6 @@ gulp.task('watch',function(){
   gulp.watch(TEMPLATES_PATH, ['templates']);
 });
 
-gulp.task('default',function(){
+gulp.task('default', ['styles','scripts','images'],function(){
   console.log('starting default BOOTSTRAP task');
 });
