@@ -1,4 +1,3 @@
-var name = 'sig GianMatteo';
-var surname= 'giancarli';
+var name = 'sig Luca Tonyy';
 
 document.write('Hello ' + name + '!');

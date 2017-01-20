@@ -31,9 +31,16 @@ gulp.task('styles',function(){
 
 // Scripts
 gulp.task('scripts', function () {
-  console.log('STARTING SCRIPTS')
   return gulp.src(SCRIPTS_PATH)
+    .pipe(plumber(function(err){
+      console.log('Scripts task Error!!!!');
+      console.log(err);
+      this.emit('end');
+    }))
+    .pipe(sourcemaps.init())
     .pipe(uglify())
+    .pipe(concat('scripts.js'))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest(DIST_PATH))
     .pipe(livereload())
 });
