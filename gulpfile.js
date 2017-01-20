@@ -6,11 +6,20 @@ var minifyCss = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
 var plumber = require('gulp-plumber');
 var sourcemaps = require ('gulp-sourcemaps');
+var babel = require ('gulp-babel');
+
+// HANDLEBARS PLUGINS
+var handlebars = require('gulp-handlebars');
+var handlebarsLib = require('handlebars');
+var declare = require('gulp-declare');
+var wrap = require('gulp-wrap');
+
 
 // File paths
 var DIST_PATH = 'public/dist';
 var SCRIPTS_PATH = "public/scripts/**/*.js";
 var CSS_PATH = 'public/css/**/*.css';
+var TEMPLATES_PATH = 'templates/**/*.hbs';
 
 // Styles
 gulp.task('styles',function(){
@@ -38,6 +47,9 @@ gulp.task('scripts', function () {
       this.emit('end');
     }))
     .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(uglify())
     .pipe(concat('scripts.js'))
     .pipe(sourcemaps.write())
@@ -50,12 +62,28 @@ gulp.task('images',function(){
   console.log('starting Images task');
 });
 
+gulp.task('templates',function(){
+  return gulp.src(TEMPLATES_PATH)
+  .pipe(handlebars({
+    handlebars: handlebarsLib
+  }))
+  .pipe(wrap('Handlebars.template(<%= contents %>)'))
+  .pipe(declare({
+    namespace: 'templates',
+    noRedeclare: true
+  }))
+  .pipe(concat('templates.js'))
+  .pipe(gulp.dest(DIST_PATH))
+  .pipe(livereload())
+})
+
 gulp.task('watch',function(){
   console.log('WATCH');
   require('./server.js');
   livereload.listen();
   gulp.watch(SCRIPTS_PATH, ['scripts']);
   gulp.watch(CSS_PATH, ['styles']);
+  gulp.watch(TEMPLATES_PATH, ['templates']);
 });
 
 gulp.task('default',function(){
